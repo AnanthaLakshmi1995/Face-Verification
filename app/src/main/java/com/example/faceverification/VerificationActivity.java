@@ -37,20 +37,16 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode,int resultCode,Intent data) {
-
+    protected void onActivityResult(int requestCode,int resultCode,Intent data)
+    {
         super.onActivityResult(requestCode,resultCode,data);
-
-        if(requestCode==2 && resultCode==RESULT_OK && data!=null  && data.getExtras()!=null){
-
+        if(requestCode==2 && resultCode==RESULT_OK && data!=null  && data.getExtras()!=null)
+        {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-
             imageVerify.setImageBitmap(photo);
-
             capturedFace = Bitmap.createScaledBitmap(photo,200,200,true);
         }
     }
-
     public void checkFace()
     {
         if(capturedFace == null)
@@ -58,18 +54,14 @@ public class VerificationActivity extends AppCompatActivity {
             Toast.makeText(this,"Capture face first",Toast.LENGTH_SHORT).show();
             return;
         }
-
         SQLiteDatabase database = db.getReadableDatabase();
-
         Cursor c = database.rawQuery("SELECT username,age,emailid,image FROM users", null);
-
         if(c.getCount() == 0)
         {
             Toast.makeText(this,"No data in database",Toast.LENGTH_SHORT).show();
             c.close();
             return;
         }
-
         while(c.moveToNext())
         {
             String name = c.getString(0);
@@ -77,7 +69,6 @@ public class VerificationActivity extends AppCompatActivity {
             String emailid = c.getString(2);
             byte[] imageBytes = c.getBlob(3);
             Bitmap storedFace = Bitmap.createScaledBitmap(byteToImage(imageBytes),200,200,true);
-
             if(compareImages(storedFace,capturedFace))
             {
                 Toast.makeText(this, "User Found Name: "+name+ "Age: "+age+ "Email: "+emailid, Toast.LENGTH_LONG).show();
@@ -86,11 +77,9 @@ public class VerificationActivity extends AppCompatActivity {
                 return;
             }
         }
-
         Toast.makeText(this,"Face Not Match",Toast.LENGTH_SHORT).show();
         c.close();
     }
-
     public boolean compareImages(Bitmap img1, Bitmap img2)
     {
         img1 = Bitmap.createScaledBitmap(img1,200,200,true);
@@ -119,9 +108,7 @@ public class VerificationActivity extends AppCompatActivity {
                 }
             }
         }
-
         double similarity = (double)matchedPixels / totalPixels;
-
         return similarity > 0.30;
     }
     public Bitmap byteToImage(byte[] imageBytes)
