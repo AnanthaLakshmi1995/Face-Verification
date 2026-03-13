@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 public class DataBase extends SQLiteOpenHelper {
     public static final String DB_Name="Face.Db";
     private static  final int DB_version=2;
@@ -35,6 +34,5 @@ public void insertUser(String name,String age,String emailid,byte[] image)
     cv.put("emailid",emailid);
     cv.put("image",image);
     db.insert ("users",null,cv);
-
 }
 }

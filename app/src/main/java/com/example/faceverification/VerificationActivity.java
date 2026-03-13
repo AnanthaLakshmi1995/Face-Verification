@@ -1,5 +1,4 @@
 package com.example.faceverification;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,8 +27,8 @@ public class VerificationActivity extends AppCompatActivity {
         camera.setOnClickListener(v -> openCamera());
         verify.setOnClickListener(v -> checkFace());
     }
-    private void openCamera() {
 
+    private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 2);
     }
@@ -43,6 +42,7 @@ public class VerificationActivity extends AppCompatActivity {
             capturedFace = Bitmap.createScaledBitmap(photo, 200, 200, true);
         }
     }
+
     public void checkFace() {
         if (capturedFace == null) {
             Toast.makeText(this, "Capture face first", Toast.LENGTH_SHORT).show();
@@ -62,8 +62,7 @@ public class VerificationActivity extends AppCompatActivity {
             byte[] imageBytes = c.getBlob(3);
             Bitmap storedFace = Bitmap.createScaledBitmap(byteToImage(imageBytes), 200, 200, true);
             if (compareImages(storedFace, capturedFace)) {
-                Toast.makeText(this, "User Found  " + name + " " + age + " " + emailid, Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this, "User Found Name: " + name + "Age: " + age + " Emailid:" + emailid, Toast.LENGTH_LONG).show();
                 c.close();
                 return;
             }
@@ -71,6 +70,7 @@ public class VerificationActivity extends AppCompatActivity {
         Toast.makeText(this, "Face Not Match", Toast.LENGTH_SHORT).show();
         c.close();
     }
+
     public boolean compareImages(Bitmap img1, Bitmap img2) {
         img1 = Bitmap.createScaledBitmap(img1, 200, 200, true);
         img2 = Bitmap.createScaledBitmap(img2, 200, 200, true);
@@ -89,18 +89,14 @@ public class VerificationActivity extends AppCompatActivity {
                 int g2 = (p2 >> 8) & 0xff;
                 int b2 = p2 & 0xff;
                 int diff = Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
-                if (diff < 50)
-                {
+                if (diff < 50) {
                     matchedPixels++;
                 }
             }
         }
         double similarity = (double) matchedPixels / totalPixels;
         return similarity > 0.30;
-    }
-
-    public Bitmap byteToImage(byte[] imageBytes) {
+    }public Bitmap byteToImage(byte[] imageBytes) {
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
-
 }
