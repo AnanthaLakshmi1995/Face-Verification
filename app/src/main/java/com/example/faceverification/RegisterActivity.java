@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
@@ -18,11 +16,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText name, age, emailid;
-    Button register, verify, camera;
+    Button register, camera;
     ImageView imageFace;
     Bitmap capturedFace;
     DataBase db;
@@ -36,15 +34,17 @@ public class RegisterActivity extends AppCompatActivity {
         age = findViewById(R.id.Age);
         emailid = findViewById(R.id.Emailid);
         register = findViewById(R.id.Register);
-        verify = findViewById(R.id.Verify);
         camera = findViewById(R.id.Camera);
         imageFace = findViewById(R.id.imageFace);
         db = new DataBase(this);
-        cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
-                {
-                    if (result.getResultCode() == RESULT_OK && result.getData()!=null )
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null)
                     {
+
                         Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
+
                         imageFace.setImageBitmap(photo);
                         capturedFace = photo;
                     }
@@ -54,9 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         register.setOnClickListener(v -> saveData());
 
-        verify.setOnClickListener(v ->
-                startActivity(new Intent(this, VerificationActivity.class)));
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED)
         {
@@ -64,7 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
         }
     }
-
     private void openCamera()
     {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -77,34 +73,42 @@ public class RegisterActivity extends AppCompatActivity {
             name.setError("Enter name");
             return;
         }
-
-        if (age.getText().toString().isEmpty())
+        String ageText = age.getText().toString().trim();
+        if (ageText.isEmpty())
         {
             age.setError("Enter age");
+            return;
+        }
+        if (!ageText.matches("\\d+"))
+        {
+            age.setError("Enter numbers only");
             return;
         }
 
         if (emailid.getText().toString().isEmpty())
         {
-            emailid.setError("Enter emailid");
+            emailid.setError("Enter email");
             return;
         }
 
-        if (capturedFace == null) {
-            Toast.makeText(this,"Capture image first",Toast.LENGTH_SHORT).show();
+        if (capturedFace == null)
+        {
+            Toast.makeText(this, "Capture image first", Toast.LENGTH_SHORT).show();
             return;
         }
+
         byte[] imageBytes = imageToByte(capturedFace);
         SQLiteDatabase database = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("username", name.getText().toString());
-        cv.put("age", age.getText().toString());
+        cv.put("age", Integer.parseInt(ageText));
         cv.put("emailid", emailid.getText().toString());
         cv.put("image", imageBytes);
         long result = database.insert("users", null, cv);
         if (result != -1)
         {
-            Toast.makeText(this,"Registered Successfully",Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, VerificationActivity.class));
             finish();
 
@@ -112,15 +116,14 @@ public class RegisterActivity extends AppCompatActivity {
         else
         {
 
-            Toast.makeText(this,"Registration Failed",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Registration Failed", Toast.LENGTH_SHORT).show();
         }
     }
     private byte[] imageToByte(Bitmap bitmap)
     {
-
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap,200,200,true);
+        Bitmap resized = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resized.compress(Bitmap.CompressFormat.JPEG,30,stream);
+        resized.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 }

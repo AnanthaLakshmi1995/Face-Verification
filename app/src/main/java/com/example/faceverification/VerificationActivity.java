@@ -15,19 +15,17 @@ public class VerificationActivity extends AppCompatActivity {
     ImageView imageVerify;
     Bitmap capturedFace;
     DataBase db;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
         camera = findViewById(R.id.Camera);
         verify = findViewById(R.id.Verify);
-        imageVerify = findViewById(R.id.imageVerify);
+        imageVerify = findViewById(R.id.imageFace);
         db = new DataBase(this);
         camera.setOnClickListener(v -> openCamera());
         verify.setOnClickListener(v -> checkFace());
     }
-
     private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 2);
