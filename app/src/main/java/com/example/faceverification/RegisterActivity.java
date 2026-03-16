@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
@@ -44,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
                     {
 
                         Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
-
+                        photo = rotateBitmap(photo, -90);
                         imageFace.setImageBitmap(photo);
                         capturedFace = photo;
                     }
@@ -61,11 +62,22 @@ public class RegisterActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
         }
     }
+
+    private Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
     private void openCamera()
     {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+        intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+        intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
         cameraLauncher.launch(intent);
     }
+
     private void saveData()
     {
         if (name.getText().toString().isEmpty())
@@ -96,7 +108,6 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Capture image first", Toast.LENGTH_SHORT).show();
             return;
         }
-
         byte[] imageBytes = imageToByte(capturedFace);
         SQLiteDatabase database = db.getWritableDatabase();
         ContentValues cv = new ContentValues();

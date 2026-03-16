@@ -11,7 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class DashBoard extends AppCompatActivity {
+public class  DashBoard extends AppCompatActivity {
  Button Register,Verification;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

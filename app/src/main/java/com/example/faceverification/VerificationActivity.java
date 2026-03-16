@@ -4,10 +4,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 public class VerificationActivity extends AppCompatActivity {
@@ -36,9 +40,17 @@ public class VerificationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getExtras() != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+            photo = rotateBitmap(photo, -90);
+
             imageVerify.setImageBitmap(photo);
             capturedFace = Bitmap.createScaledBitmap(photo, 200, 200, true);
         }
+    }
+
+    private Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
     public void checkFace() {
@@ -60,7 +72,22 @@ public class VerificationActivity extends AppCompatActivity {
             byte[] imageBytes = c.getBlob(3);
             Bitmap storedFace = Bitmap.createScaledBitmap(byteToImage(imageBytes), 200, 200, true);
             if (compareImages(storedFace, capturedFace)) {
-                Toast.makeText(this, "User Found Name: " + name + "Age: " + age + " Emailid:" + emailid, Toast.LENGTH_LONG).show();
+                TableLayout table = findViewById(R.id.userTable);
+                TableRow row = new TableRow(this);
+                TextView tvName = new TextView(this);
+                tvName.setText(name);
+                tvName.setPadding(8,8,8,8);
+                TextView tvAge = new TextView(this);
+                tvAge.setText(age);
+                tvAge.setPadding(8,8,8,8);
+                TextView tvEmail = new TextView(this);
+                tvEmail.setText(emailid);
+                tvEmail.setPadding(8,8,8,8);
+                row.addView(tvName);
+                row.addView(tvAge);
+                row.addView(tvEmail);
+                table.addView(row);
+                //Toast.makeText(this, "User Found Name: " + name + "Age: " + age + " Emailid:" + emailid, Toast.LENGTH_LONG).show();
                 c.close();
                 return;
             }
@@ -94,7 +121,8 @@ public class VerificationActivity extends AppCompatActivity {
         }
         double similarity = (double) matchedPixels / totalPixels;
         return similarity > 0.30;
-    }public Bitmap byteToImage(byte[] imageBytes) {
+    }
+    public Bitmap byteToImage(byte[] imageBytes) {
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 }
