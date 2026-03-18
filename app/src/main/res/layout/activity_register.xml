@@ -9,17 +9,25 @@
     android:orientation="vertical"
     android:background="@drawable/gradient"
     tools:context=".RegisterActivity">
-
-    <ImageView
-            android:id="@+id/imageFace"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/face_logo" />
-
-        <EditText
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Registration Screen"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageFace"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/face_logo" />
+    <EditText
             android:id="@+id/Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,31 +38,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Age"
+            android:inputType="number"
             android:textColor="@android:color/black" />
 
         <EditText
             android:id="@+id/Emailid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="Emailid@gmail.com"
             android:textColor="@android:color/black" />
         <Button
             android:id="@+id/Camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Capture Face"
-            android:textColor="@android:color/black" />
-        <Button
-            android:id="@+id/Register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Register"
-            android:textColor="@android:color/black" />
-        <Button
-            android:id="@+id/Verify"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Verification"
-            android:textColor="@android:color/black" />
+            android:layout_marginBottom="55dp"
+            android:text="Capture Face" />
+
+    <Button
+        android:id="@+id/Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_marginBottom="15dp"/>
+
+
 </LinearLayout>
