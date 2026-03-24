@@ -31,6 +31,7 @@
             android:id="@+id/Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:hint="Name"
             android:textColor="@android:color/black" />
         <EditText
@@ -52,15 +53,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="55dp"
             android:text="Capture Face" />
 
     <Button
         android:id="@+id/Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginTop="40dp"
+        android:text="Register" />
+
+    <ImageView
+        android:id="@+id/qrImageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"/>
+      <Button
+        android:id="@+id/sendQRcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+          android:layout_marginBottom="10dp"
+        android:text="send QR code to mail" />
+
 
 
 </LinearLayout>
