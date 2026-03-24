@@ -14,7 +14,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-public class VerificationActivity extends AppCompatActivity {
+public class  VerificationActivity extends AppCompatActivity {
     Button camera, verify;
     ImageView imageVerify;
     Bitmap capturedFace;
@@ -120,7 +120,7 @@ public class VerificationActivity extends AppCompatActivity {
             }
         }
         double similarity = (double) matchedPixels / totalPixels;
-        return similarity > 0.30;
+        return similarity > 0.50;
     }
     public Bitmap byteToImage(byte[] imageBytes) {
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
