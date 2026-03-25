@@ -59,20 +59,29 @@
         android:id="@+id/Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:text="Register" />
 
     <ImageView
         android:id="@+id/qrImageView"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"/>
       <Button
         android:id="@+id/sendQRcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-          android:layout_marginBottom="10dp"
         android:text="send QR code to mail" />
+    <Button
+        android:id="@+id/scanButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan the QR code"
+         />
+    <TextView
+        android:id="@+id/scannedTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scanned data display" />
 
 
 
