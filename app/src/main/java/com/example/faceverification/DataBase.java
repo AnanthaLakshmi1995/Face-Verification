@@ -11,6 +11,7 @@ public class DataBase extends SQLiteOpenHelper {
     private static  final int DB_version=2;
     public DataBase(Context context)
     {
+
         super(context,DB_Name,null,DB_version);
     }
 
