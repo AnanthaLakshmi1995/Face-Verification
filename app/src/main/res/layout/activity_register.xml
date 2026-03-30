@@ -7,18 +7,19 @@
     android:layout_height="match_parent"
     android:padding="45dp"
     android:orientation="vertical"
-    android:background="@drawable/gradient"
+    android:background="@color/white"
     tools:context=".RegisterActivity">
     <TextView
         android:id="@+id/Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Registration Screen"
+        android:text="Registration"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="25dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:gravity="center"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageFace"
         android:layout_width="120dp"
@@ -52,36 +53,31 @@
             android:id="@+id/Camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Capture Face" />
+            android:layout_marginTop="30dp"
+            android:text="Capture Face"
+            android:backgroundTint="#000000"
+            android:textColor="#FFFFFF"/>
 
     <Button
         android:id="@+id/Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register" />
-
+        android:text="Complete Registration"
+        android:backgroundTint="#000000"
+        android:textColor="#FFFFFF"/>
     <ImageView
         android:id="@+id/qrImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"/>
-      <Button
+    <Button
         android:id="@+id/sendQRcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="send QR code to mail" />
-    <Button
-        android:id="@+id/scanButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Scan the QR code"
-         />
-    <TextView
-        android:id="@+id/scannedTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Scanned data display" />
+        android:text="send QR code to mail"
+        android:backgroundTint="#000000"
+        android:textColor="#FFFFFF"/>
+
 
 
 

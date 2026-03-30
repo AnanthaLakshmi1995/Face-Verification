@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.faceverification"
     compileSdk = 36
 
@@ -30,6 +31,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 
     // ✅ Prevent META-INF conflicts
     packaging {
@@ -61,6 +63,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation(libs.media3.datasource)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -7,14 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="45dp"
-    android:background="@drawable/gradient"
+    android:background="@color/white"
     tools:context=".VerificationActivity">
     <TextView
         android:id="@+id/Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Login Screen"
+        android:text="Sign in"
+        android:gravity="center"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="25dp"
@@ -24,7 +25,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="35dp"
         android:scaleType="centerCrop"
         android:src="@drawable/face_logo" />
     <Button
@@ -32,18 +33,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Capture Face"
-        android:layout_marginTop="15dp"/>
+        android:backgroundTint="#000000"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="25dp" />
+
+    <Button
+        android:id="@+id/scanQR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan the QR code"
+
+        android:backgroundTint="#000000"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="55dp"
+        />
     <Button
         android:id="@+id/Verify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Verify"
-        android:layout_marginTop="95dp"/>
+        android:backgroundTint="#000000"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="60dp"
+        />
     <TableLayout
         android:id="@+id/userTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="25dp">
         <TableRow>
             <TextView
                 android:text="Name"
