@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,6 +16,7 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -52,7 +54,7 @@ import javax.mail.internet.MimeMultipart;
 public class RegisterActivity extends AppCompatActivity {
 
     EditText name, age, emailid;
-    Button register, camera, sendQRcode;
+    Button register, camera;
     ImageView imageFace, qrImageView;
     Bitmap capturedFace;
     DataBase db;
@@ -67,13 +69,17 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        TextView faceStatus = findViewById(R.id.faceStatus);
+        //faceStatus.setText("✓ Enrolled");
+        //faceStatus.setTextColor(Color.GREEN);
+        //faceStatus.setText("✗ Not Matched");
+        //faceStatus.setTextColor(Color.RED);
         name = findViewById(R.id.Name);
         age = findViewById(R.id.Age);
         emailid = findViewById(R.id.Emailid);
         register = findViewById(R.id.Register);
         camera = findViewById(R.id.Camera);
-        sendQRcode = findViewById(R.id.sendQRcode);
+        //sendQRcode = findViewById(R.id.sendQRcode);
         imageFace = findViewById(R.id.imageFace);
         qrImageView = findViewById(R.id.qrImageView);
 
@@ -87,6 +93,8 @@ public class RegisterActivity extends AppCompatActivity {
                         photo = rotateBitmap(photo, -90);
                         capturedFace = photo;
                         imageFace.setImageBitmap(photo);
+                        faceStatus.setText("✓ Enrolled");
+                        faceStatus.setTextColor(Color.GREEN);
                     }
                 });
 
@@ -98,14 +106,14 @@ public class RegisterActivity extends AppCompatActivity {
         camera.setOnClickListener(v -> openCamera());
         register.setOnClickListener(v -> saveData());
 
-        sendQRcode.setOnClickListener(v -> {
-            if (savedEmail != null && generatedQrBitmap != null) {
-                File file = qrBitmapToFile(generatedQrBitmap);
-                sendEmailWithQr(savedEmail, file);
-            } else {
-                Toast.makeText(this, "Register first!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        //sendQRcode.setOnClickListener(v -> {
+            //if (savedEmail != null && generatedQrBitmap != null) {
+               // File file = qrBitmapToFile(generatedQrBitmap);
+               // sendEmailWithQr(savedEmail, file);
+           // } else {
+               // Toast.makeText(this, "Register first!", Toast.LENGTH_SHORT).show();
+           // }
+       // });
     }
 
     private Bitmap rotateBitmap(Bitmap source, float angle) {
@@ -122,6 +130,8 @@ public class RegisterActivity extends AppCompatActivity {
         intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
         intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
         cameraLauncher.launch(intent);
+        Toast.makeText(this, " Your face data has been securely captured", Toast.LENGTH_SHORT).show();
+
     }
 
     private void saveData() {
@@ -205,7 +215,6 @@ public class RegisterActivity extends AppCompatActivity {
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
-
     private byte[] imageToByte(Bitmap bitmap) {
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -308,11 +317,12 @@ public class RegisterActivity extends AppCompatActivity {
 
                 runOnUiThread(() ->
                 {
-                    Toast.makeText(this, "QR Sent via email!", Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(this, "QR Code Sent to your emailid", Toast.LENGTH_LONG).show();
+                    finish();
                 });
-                Intent intent=new Intent(RegisterActivity.this, VerificationActivity.class);
+                Intent intent=new Intent(RegisterActivity.this, DashBoard.class);
                 startActivity(intent);
+                finish();
             }
             catch (Exception e)
             {

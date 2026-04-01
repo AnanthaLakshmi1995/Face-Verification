@@ -1,84 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="45dp"
-    android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".RegisterActivity">
-    <TextView
-        android:id="@+id/Title"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F5F5F5">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Registration"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        android:gravity="center"/>
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageFace"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/face_logo" />
-    <EditText
-            android:id="@+id/Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:hint="Name"
-            android:textColor="@android:color/black" />
-        <EditText
-            android:id="@+id/Age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Age"
-            android:inputType="number"
-            android:textColor="@android:color/black" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <EditText
-            android:id="@+id/Emailid"
+        <TextView
+            android:id="@+id/Status"
+            android:layout_width="253dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="Create Account"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Emailid@gmail.com"
-            android:textColor="@android:color/black" />
+            android:layout_marginTop="14dp"
+            android:text="Fill in your details below!"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:layout_marginTop="25dp"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/Name"
+                android:layout_width="335dp"
+                android:layout_height="53dp"
+                android:layout_marginBottom="12dp"
+                android:drawableStart="@drawable/profile"
+                android:hint="Full Name"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/Age"
+                android:layout_width="338dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Age"
+                android:drawableStart="@drawable/lock"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/Emailid"
+                android:layout_width="331dp"
+                android:layout_height="55dp"
+                android:layout_marginBottom="12dp"
+                android:hint="Emailid"
+                android:drawableStart="@drawable/mail"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="335dp"
+                android:layout_height="33dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Face Enroll" />
+
+                <TextView
+                    android:id="@+id/faceStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageFace"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="35dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/face_image" />
+
+            <Button
+                android:id="@+id/Camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="#000000"
+                android:text="Capture Face"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/qrImageView"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
         <Button
-            android:id="@+id/Camera"
+            android:id="@+id/Register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Capture Face"
+            android:layout_marginBottom="15dp"
             android:backgroundTint="#000000"
-            android:textColor="#FFFFFF"/>
-
-    <Button
-        android:id="@+id/Register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Complete Registration"
-        android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"/>
-    <ImageView
-        android:id="@+id/qrImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"/>
-    <Button
-        android:id="@+id/sendQRcode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="send QR code to mail"
-        android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"/>
+            android:text="Complete Registration and Continue..."
+            android:textColor="#FFFFFF" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:gravity="center"
+            android:text="Biometric data encrypted and stored securely"/>
 
 
-
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

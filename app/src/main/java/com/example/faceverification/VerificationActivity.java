@@ -80,7 +80,7 @@ public class VerificationActivity extends AppCompatActivity {
                     imageVerify.setImageBitmap(capturedFace);
                 }
 
-                Toast.makeText(this, "QR Code Scanned, Now click on Verify", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "QR Code Scanned, Now click  on Verify", Toast.LENGTH_LONG).show();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -202,7 +202,6 @@ public class VerificationActivity extends AppCompatActivity {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, skey);
         byte[] decoded = Base64.decode(encrypted, Base64.DEFAULT);
-
         byte[] decrypted = cipher.doFinal(decoded);
         return new String(decrypted, "UTF-8");
     }

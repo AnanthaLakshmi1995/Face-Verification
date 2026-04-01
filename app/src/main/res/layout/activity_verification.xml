@@ -9,25 +9,37 @@
     android:padding="45dp"
     android:background="@color/white"
     tools:context=".VerificationActivity">
+
     <TextView
         android:id="@+id/Title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="97dp"
         android:layout_gravity="center"
-        android:text="Sign in"
         android:gravity="center"
+        android:text="Sign in"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="25dp"
+        android:textSize="35dp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Capture your face and scan your QR code to begin"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageFace"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="55dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/face_logo" />
+        android:src="@drawable/face_image" />
     <Button
         android:id="@+id/Camera"
         android:layout_width="match_parent"
@@ -35,49 +47,50 @@
         android:text="Capture Face"
         android:backgroundTint="#000000"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="65dp" />
 
     <Button
         android:id="@+id/scanQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scan the QR code"
-
+        android:text="Scan QR code"
         android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="55dp"
-        />
+        android:textColor="#FFFFFF" />
+
     <Button
         android:id="@+id/Verify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Verify"
         android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="60dp"
-        />
+        android:textColor="#FFFFFF" />
     <TableLayout
         android:id="@+id/userTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp">
-        <TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
             <TextView
+                android:padding="8dp"
                 android:text="Name"
-                android:textStyle="bold"
-                android:padding="8dp"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:padding="8dp"
                 android:text="Age"
-                android:textStyle="bold"
-                android:padding="8dp"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:padding="8dp"
                 android:text="Email"
-                android:textStyle="bold"
-                android:padding="8dp"/>
+                android:textStyle="bold" />
         </TableRow>
 
     </TableLayout>
+
 
 </LinearLayout>

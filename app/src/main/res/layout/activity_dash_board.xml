@@ -13,20 +13,20 @@
     <TextView
         android:id="@+id/Title"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="79dp"
         android:layout_gravity="center"
         android:layout_marginTop="25dp"
-        android:text="Face Recognization"
+        android:gravity="center"
+        android:text="Welcome to Face Verification App"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="25dp"
-        android:textStyle="bold"
-        android:gravity="center"/>
+        android:textStyle="bold" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageFace"
-        android:layout_width="293dp"
-        android:layout_height="322dp"
+        android:layout_width="399dp"
+        android:layout_height="365dp"
         android:layout_gravity="center"
         android:layout_marginTop="54dp"
         android:scaleType="centerCrop"
@@ -35,8 +35,8 @@
         android:id="@+id/Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        android:text="Register"
+        android:layout_marginTop="10dp"
+        android:text="Get Started...."
         android:backgroundTint="#000000"
         android:textColor="#FFFFFF"/>
     <Button
@@ -44,6 +44,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign in"
+        android:layout_marginBottom="25dp"
         android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"/>
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="200dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:gravity="center"
+        android:text="powered by facial verification and QR authentication" />
 </LinearLayout>
