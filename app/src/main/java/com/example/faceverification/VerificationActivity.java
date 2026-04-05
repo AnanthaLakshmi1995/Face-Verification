@@ -21,6 +21,10 @@ import javax.crypto.spec.SecretKeySpec;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -32,11 +36,14 @@ public class VerificationActivity extends AppCompatActivity {
 
     Button camera, verifyBtn, scanQR;
     ImageView imageVerify;
+    TextView faceStatus;
     Bitmap capturedFace;
     Bitmap qrFaceBitmap;
 
     String qrName = "", qrEmail = "", qrAge = "";
     String secretKey = "1234567890123456";
+    boolean isRealFaceDetected = false;
+
 
     ActivityResultLauncher<ScanOptions> qrScannerLauncher;
 
@@ -48,6 +55,7 @@ public class VerificationActivity extends AppCompatActivity {
         verifyBtn = findViewById(R.id.Verify);
         scanQR = findViewById(R.id.scanQR);
         imageVerify = findViewById(R.id.imageFace);
+        faceStatus = findViewById(R.id.faceStatus);
         camera.setOnClickListener(v -> openCamera());
         scanQR.setOnClickListener(v -> startQrScanner());
         verifyBtn.setOnClickListener(v -> verifyFaces());
@@ -103,8 +111,8 @@ public class VerificationActivity extends AppCompatActivity {
 
             capturedFace = Bitmap.createScaledBitmap(photo, 200, 200, true);
             imageVerify.setImageBitmap(capturedFace);
-
-            Toast.makeText(this, "Face Captured", Toast.LENGTH_SHORT).show();
+            detectFace(photo);
+            //Toast.makeText(this, "Face Captured", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -124,6 +132,45 @@ public class VerificationActivity extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+    private void detectFace(Bitmap bitmap)
+    {
+
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+        FaceDetectorOptions options = new FaceDetectorOptions.Builder().setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
+                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
+                .setMinFaceSize(0.15f)
+                .build();
+        FaceDetector detector = FaceDetection.getClient(options);
+        detector.process(image).addOnSuccessListener(faces ->
+                {
+
+                    if (!faces.isEmpty())
+                    {
+                        isRealFaceDetected = true;
+                        Toast.makeText(this, "Face Detected ✓", Toast.LENGTH_SHORT).show();
+                        TextView faceStatus = findViewById(R.id.faceStatus);
+                       faceStatus.setText("✓ Face Detected");
+                    faceStatus.setTextColor(Color.GREEN);
+
+                    }
+                    else
+                    {
+
+                        isRealFaceDetected = false;
+                        Toast.makeText(this, "No Face Detected", Toast.LENGTH_SHORT).show();
+                        TextView faceStatus = findViewById(R.id.faceStatus);
+                      faceStatus.setText("✗ No Face Found");
+                      faceStatus.setTextColor(Color.RED);
+                    }
+                })
+                .addOnFailureListener(e ->
+                {
+                    isRealFaceDetected = false;
+                    Toast.makeText(this, "Face Detection Error!", Toast.LENGTH_SHORT).show();
+                    Log.e("FACE", e.getMessage());
+                });
     }
     private void verifyFaces() {
 
@@ -165,9 +212,7 @@ public class VerificationActivity extends AppCompatActivity {
                 diff += Math.abs(g1 - g2);
             }
         }
-
         double avgDiff = diff / (width * height);
-
         return avgDiff < 45;
     }
 

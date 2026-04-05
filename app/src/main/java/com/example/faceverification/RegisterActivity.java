@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +24,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -50,6 +50,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import com.google.mlkit.vision.face.Face;
+import com.google.mlkit.vision.face.FaceContour;
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
+import com.google.mlkit.vision.common.InputImage;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -62,6 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
     String savedEmail;
 
     ActivityResultLauncher<Intent> cameraLauncher;
+    boolean isRealFaceDetected = false;
 
     private static final String secretKey = "1234567890123456"; // 16 chars AES
 
@@ -84,7 +92,6 @@ public class RegisterActivity extends AppCompatActivity {
         qrImageView = findViewById(R.id.qrImageView);
 
         db = new DataBase(this);
-
         cameraLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -93,38 +100,74 @@ public class RegisterActivity extends AppCompatActivity {
                         photo = rotateBitmap(photo, -90);
                         capturedFace = photo;
                         imageFace.setImageBitmap(photo);
-                        faceStatus.setText("✓ Enrolled");
-                        faceStatus.setTextColor(Color.GREEN);
+                        detectFace(photo);
+                        //faceStatus.setText("✓ Enrolled");
+                        //faceStatus.setTextColor(Color.GREEN);
                     }
                 });
+
+
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
         }
-
+        //Toast.makeText(this, "Please show your face clearly to the camera", Toast.LENGTH_LONG).show();
         camera.setOnClickListener(v -> openCamera());
         register.setOnClickListener(v -> saveData());
 
-        //sendQRcode.setOnClickListener(v -> {
-            //if (savedEmail != null && generatedQrBitmap != null) {
-               // File file = qrBitmapToFile(generatedQrBitmap);
-               // sendEmailWithQr(savedEmail, file);
-           // } else {
-               // Toast.makeText(this, "Register first!", Toast.LENGTH_SHORT).show();
-           // }
-       // });
+
     }
 
-    private Bitmap rotateBitmap(Bitmap source, float angle) {
+    private Bitmap rotateBitmap(Bitmap source, float angle)
+    {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(
-                source, 0, 0, source.getWidth(), source.getHeight(), matrix, true
-        );
+                source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    private void openCamera() {
+    private void detectFace(Bitmap bitmap)
+    {
+
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+        FaceDetectorOptions options = new FaceDetectorOptions.Builder().setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
+                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
+                .setMinFaceSize(0.15f)
+                .build();
+        FaceDetector detector = FaceDetection.getClient(options);
+        detector.process(image).addOnSuccessListener(faces ->
+                {
+
+                    if (!faces.isEmpty())
+                    {
+                        isRealFaceDetected = true;
+                        Toast.makeText(this, "Face Detected ✓", Toast.LENGTH_SHORT).show();
+                        TextView faceStatus = findViewById(R.id.faceStatus);
+                        faceStatus.setText("✓ Face Detected");
+                        faceStatus.setTextColor(Color.GREEN);
+
+                    }
+                    else
+                    {
+
+                        isRealFaceDetected = false;
+                        Toast.makeText(this, "No Face Detected", Toast.LENGTH_SHORT).show();
+                        TextView faceStatus = findViewById(R.id.faceStatus);
+                        faceStatus.setText("✗ No Face Found");
+                        faceStatus.setTextColor(Color.RED);
+                    }
+                })
+                .addOnFailureListener(e ->
+                {
+                    isRealFaceDetected = false;
+                    Toast.makeText(this, "Face Detection Error!", Toast.LENGTH_SHORT).show();
+                    Log.e("FACE", e.getMessage());
+                });
+    } 
+    private void openCamera()
+    {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
         intent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
@@ -134,165 +177,164 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void saveData() {
-
+    private void saveData()
+    {
         String nameText = name.getText().toString().trim();
         String ageText = age.getText().toString().trim();
         String emailText = emailid.getText().toString().trim();
 
-        if (nameText.isEmpty()) {
+        if (nameText.isEmpty())
+        {
             name.setError("Enter name");
             return;
         }
-        if (ageText.isEmpty()) {
+        if (ageText.isEmpty())
+        {
             age.setError("Enter age");
             return;
         }
-        if (!ageText.matches("\\d+")) {
+        if (!ageText.matches("\\d+"))
+        {
             age.setError("Numbers only");
             return;
         }
-        if (emailText.isEmpty()) {
+        if (emailText.isEmpty())
+        {
             emailid.setError("Enter email");
             return;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches())
+        {
             emailid.setError("Invalid email");
             return;
         }
-        if (capturedFace == null) {
-            Toast.makeText(this, "Capture face first!", Toast.LENGTH_SHORT).show();
+       // if (capturedFace == null) {
+          //  Toast.makeText(this, "Capture face first!", Toast.LENGTH_SHORT).show();
+            //return;}
+        if (!isRealFaceDetected)
+        {
+            Toast.makeText(this, "Please capture a REAL face!", Toast.LENGTH_SHORT).show();
             return;
         }
-
         byte[] imageBytes = imageToByte(capturedFace);
-
         SQLiteDatabase database = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("username", nameText);
         cv.put("age", Integer.parseInt(ageText));
         cv.put("emailid", emailText);
         cv.put("image", imageBytes);
-
         long result = database.insert("users", null, cv);
-
-        if (result != -1) {
+        if (result != -1)
+        {
             Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show();
             savedEmail = emailText;
             String faceBase64 = bitmapToBase64(capturedFace);
-
-
-            try {
-
+            try
+            {
                 JSONObject obj = new JSONObject();
-
                 obj.put("name", name.getText().toString());
                 obj.put("email", emailid.getText().toString());
                 obj.put("age", age.getText().toString());
                 obj.put("face", faceBase64);
                 String encryptedText = encrypt(obj.toString(), secretKey);
                 generatedQrBitmap = generateQRCode(encryptedText);
-
                 qrImageView.setImageBitmap(generatedQrBitmap);
-
                 File qrcodeFile = qrBitmapToFile(generatedQrBitmap);
                 sendEmailWithQr(savedEmail, qrcodeFile);
 
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
                 Toast.makeText(this, "QR/Encryption Error!", Toast.LENGTH_SHORT).show();
             }
 
-        } else {
+        }
+        else
+        {
             Toast.makeText(this, "Registration Failed", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private String bitmapToBase64(Bitmap bitmap) {
+    private String bitmapToBase64(Bitmap bitmap)
+    {
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, 50, 50, true); // smaller
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         resized.compress(Bitmap.CompressFormat.JPEG, 30, baos); // lower quality
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
-    private byte[] imageToByte(Bitmap bitmap) {
+    private byte[] imageToByte(Bitmap bitmap)
+    {
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         resized.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
-    private String buildEncryptedQR(String name, String email, String age, String faceBase64, String secretKey) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("name", name);
-            obj.put("email", email);
-            obj.put("age", age);
-            obj.put("face", faceBase64);
-
-            String jsonString = obj.toString();
-            return encrypt(jsonString, secretKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    private String encrypt(String data, String key) throws Exception {
+    private String encrypt(String data, String key) throws Exception
+    {
         byte[] keyBytes = Arrays.copyOf(key.getBytes("UTF-8"), 16);
         SecretKeySpec skey = new SecretKeySpec(keyBytes, "AES");
-
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, skey);
-
         byte[] encrypted = cipher.doFinal(data.getBytes("UTF-8"));
         return Base64.encodeToString(encrypted, Base64.NO_WRAP);
     }
-
-    private Bitmap generateQRCode(String data) {
-        try {
+    private Bitmap generateQRCode(String data)
+    {
+        try
+        {
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
             BitMatrix bitMatrix = multiFormatWriter.encode(data, BarcodeFormat.QR_CODE, 500, 500);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             return barcodeEncoder.createBitmap(bitMatrix);
-        } catch (WriterException e) {
+        }
+        catch (WriterException e)
+        {
             e.printStackTrace();
             return null;
         }
     }
-
-
-
-    private File qrBitmapToFile(Bitmap bitmap) {
-        try {
+    private File qrBitmapToFile(Bitmap bitmap)
+    {
+        try
+        {
             File file = new File(getExternalCacheDir(), "qrcode.png");
             FileOutputStream out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.close();
             return file;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             return null;
         }
     }
 
-    private void sendEmailWithQr(String email, File qrFile) {
-        new Thread(() -> {
-            try {
-                if (qrFile == null || !qrFile.exists()) {
+    private void sendEmailWithQr(String email, File qrFile)
+    {
+        new Thread(() ->
+        {
+            try
+            {
+                if (qrFile == null || !qrFile.exists())
+                {
                     runOnUiThread(() -> Toast.makeText(this, "QR file not created!", Toast.LENGTH_SHORT).show());
                     return;
                 }
                 String senderEmail = "anisatya2019@gmail.com";
                 String senderPassword = "xjvv uyfw firw iies";
-
                 Properties props = new Properties();
                 props.put("mail.smtp.auth", "true");
                 props.put("mail.smtp.starttls.enable", "true");
                 props.put("mail.smtp.host", "smtp.gmail.com");
                 props.put("mail.smtp.port", "587");
                 props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-                Session session = Session.getInstance(props, new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
+                Session session = Session.getInstance(props, new Authenticator()
+                {
+                    protected PasswordAuthentication getPasswordAuthentication()
+                    {
                         return new PasswordAuthentication(senderEmail, senderPassword);
                     }
                 });
@@ -301,20 +343,15 @@ public class RegisterActivity extends AppCompatActivity {
                 message.setFrom(new InternetAddress(senderEmail));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
                 message.setSubject("Your Registration QR Code");
-
                 MimeBodyPart textPart = new MimeBodyPart();
                 textPart.setText("Here is your encrypted QR Code including your face for verification.");
-
                 MimeBodyPart attachPart = new MimeBodyPart();
                 attachPart.attachFile(qrFile);
-
                 Multipart multipart = new MimeMultipart();
                 multipart.addBodyPart(textPart);
                 multipart.addBodyPart(attachPart);
-
                 message.setContent(multipart);
                 Transport.send(message);
-
                 runOnUiThread(() ->
                 {
                     Toast.makeText(this, "QR Code Sent to your emailid", Toast.LENGTH_LONG).show();

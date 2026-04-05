@@ -40,6 +40,24 @@
         android:layout_marginTop="55dp"
         android:scaleType="centerCrop"
         android:src="@drawable/face_image" />
+    <LinearLayout
+        android:layout_width="335dp"
+        android:layout_height="33dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Face Status" />
+
+        <TextView
+            android:id="@+id/faceStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/Camera"
         android:layout_width="match_parent"
@@ -47,8 +65,7 @@
         android:text="Capture Face"
         android:backgroundTint="#000000"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="65dp" />
-
+        android:layout_marginTop="25dp" />
     <Button
         android:id="@+id/scanQR"
         android:layout_width="match_parent"
@@ -91,6 +108,5 @@
         </TableRow>
 
     </TableLayout>
-
 
 </LinearLayout>
